@@ -1,10 +1,13 @@
 package com.example.myapplication;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,12 +40,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        setTouchOutsideEditTextListeners(findViewById(R.id.parent));
 
-        startUpdateCurrentWeather();
         setCityText();
         startUpdateDate();
         addSubmitListener();
-
+        startUpdateCurrentWeather();
         updateForecast();
     }
 
@@ -59,11 +62,11 @@ public class MainActivity extends AppCompatActivity {
                 TextView minMaxTempTextView = findViewById(R.id.minMaxText);
 
                 JSONObject main = (JSONObject) response.opt("main");
+
                 String currentTemp = main.optString("temp", "");
                 String minTemp = main.optString("temp_min", "");
                 String maxTemp = main.optString("temp_max", "");
-
-                String currentTempText = getFormattedTemp(currentTemp);
+                String currentTempText = getFormattedTemp(currentTemp) + "F";
                 String minMaxText = "Max " + getFormattedTemp(maxTemp) + " | Min " + getFormattedTemp(minTemp);
 
                 currentTempTextView.setText(currentTempText);
@@ -103,6 +106,27 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void setTouchOutsideEditTextListeners(View view) {
+
+        // Set up touch listener for non-text box views to hide keyboard.
+        if (!(view instanceof EditText)) {
+            view.setOnTouchListener(new View.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideSoftKeyboard(MainActivity.this);
+                    return false;
+                }
+            });
+        }
+
+        //If a layout container, iterate over children and seed recursion.
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                View innerView = ((ViewGroup) view).getChildAt(i);
+                setTouchOutsideEditTextListeners(innerView);
+            }
+        }
+    }
+
     private void setCityText() {
         TextView cityTextView = findViewById(R.id.cityText);
         cityTextView.setText(WordUtils.capitalize(currentCity));
@@ -114,21 +138,25 @@ public class MainActivity extends AppCompatActivity {
 
     private void addSubmitListener() {
         Button clickButton = findViewById(R.id.submitButton);
-        clickButton.setOnClickListener( new View.OnClickListener() {
+        clickButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+                hideSoftKeyboard(MainActivity.this);
                 EditText textInput = getCityInput();
-
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(textInput.getWindowToken(), 0);
-
                 currentCity = textInput.getText().toString();
                 textInput.getText().clear();
                 updateWeather();
                 updateForecast();
             }
         });
+    }
+
+    private void hideSoftKeyboard(Activity activity) {
+        if(activity.getCurrentFocus() != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+        }
     }
 
     private void startUpdateDate() {

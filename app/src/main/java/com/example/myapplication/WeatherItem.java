@@ -27,7 +27,7 @@ class WeatherItem {
             String dateString = format.format(new Date(parseLong(dt + "000")));
 
             this.description = (String) weather.get("description");
-            this.iconCode = (String) weather.get("icon");
+            this.iconCode = getIconURI((String)weather.get("icon"));
             this.date = dateString;
             this.minTemp = getFormattedTemp((double)temp.get("min"));
             this.maxTemp = getFormattedTemp((double)temp.get("max"));
@@ -39,5 +39,27 @@ class WeatherItem {
     private String getFormattedTemp(double temp) {
         int i = Math.round((float)temp);
         return String.valueOf(i) + "º";
+    }
+
+    private String getIconURI(String iconCode) {
+        if(iconCode.matches("01d")) {
+            return "@drawable/sunny";
+        }else if(iconCode.matches("01n")) {
+            return "@drawable/moon";
+        }else if(iconCode.matches("02d|03d|04d")) {
+            return "@drawable/partly_sunny";
+        } else if(iconCode.matches("02n|03n|04n")) {
+            return "@drawable/partly_cloudy_moon";
+        }else if(iconCode.matches("10d")) {
+            return "@drawable/drizzle";
+        }else if(iconCode.matches("09d")) {
+            return "@drawable/heavy_rain";
+        }else if(iconCode.matches("13d")) {
+            return "@drawable/heavy_snow";
+        }else if(iconCode.matches("11d")) {
+            return "@drawable/lightning";
+        } else {
+            return "@drawable/thermometer";
+        }
     }
 }

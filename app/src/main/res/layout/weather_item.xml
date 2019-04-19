@@ -27,15 +27,16 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/dateItemView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:textSize="24sp"
+                android:paddingBottom="5dp"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                app:fontFamily="@font/roboto_medium"
                 tools:text="Date" />
 
             <TextView
@@ -53,23 +54,24 @@
 
             <ImageView
                 android:id="@+id/weatherImage"
-                android:layout_width="match_parent"
+                android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_weight="1" />
+                android:layout_weight="0.5" />
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/minMaxItemText"
-                android:layout_width="74dp"
-                android:layout_height="match_parent">
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5">
 
                 <TextView
                     android:id="@+id/maxText"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_height="wrap_content"
                     android:gravity="bottom|center_horizontal"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
                     app:layout_constraintBottom_toTopOf="@+id/minText"
                     app:layout_constraintEnd_toEndOf="@+id/minText"
                     app:layout_constraintStart_toStartOf="parent"
@@ -81,11 +83,13 @@
                     android:id="@+id/minText"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="2dp"
                     android:gravity="center_horizontal"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/maxText"
                     tools:text="Min" />
